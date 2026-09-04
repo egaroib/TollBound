@@ -113,6 +113,47 @@ namespace Tollbound.Content
 
             teleport.m_colorUnconnected = Scale(tier.Hue, TollboundConfig.IdleGlowIntensity.Value);
             teleport.m_colorTargetfound = Scale(tier.Hue, TollboundConfig.ConnectedGlowIntensity.Value);
+
+            TintSwirl(teleport, tier);
+        }
+
+        /// <summary>
+        /// Recolours the swirl that appears when you stand at a connected portal.
+        ///
+        /// EffectFade holds it as particle systems plus a light, both of which live inside
+        /// this cloned prefab and so are safe to modify. The m_connected effect list is
+        /// deliberately left alone: those are shared prefabs, and tinting one would recolour
+        /// every vanilla portal in the world too.
+        /// </summary>
+        private static void TintSwirl(TeleportWorld teleport, TierInfo tier)
+        {
+            if (teleport.m_target_found == null)
+            {
+                return;
+            }
+
+            var root = teleport.m_target_found.gameObject;
+            var tint = tier.Hue;
+            tint.a = 1f;
+
+            var systems = root.GetComponentsInChildren<ParticleSystem>(includeInactive: true);
+            foreach (var system in systems)
+            {
+                // startColor multiplies the particle's texture, so a hue at full alpha
+                // tints without washing the effect out.
+                var main = system.main;
+                main.startColor = new ParticleSystem.MinMaxGradient(tint);
+            }
+
+            var lights = root.GetComponentsInChildren<Light>(includeInactive: true);
+            foreach (var light in lights)
+            {
+                light.color = tint;
+            }
+
+            TollboundPlugin.LogVerbose(
+                $"{tier.PortalPrefab}: tinted {systems.Length} particle system(s) " +
+                $"and {lights.Length} light(s).");
         }
 
         /// <summary>

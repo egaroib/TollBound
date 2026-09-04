@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0
+- Portals of different tiers now connect freely. A crossing carries the LOWER of its two
+  ends, so a Swamp portal linked to a Black Forest one is a Black Forest crossing both
+  ways, and either linked to a vanilla portal carries nothing restricted at all.
+- Removed the same-tier pairing restriction that made connections exclusive.
+- The toll gate: ceiling check, per-biome tolls charged on the cargo you carry, and
+  per-unit loss rolls for biomes whose boss still lives. Nothing is spent unless every
+  check passes.
+- The proximity swirl now reflects Tollbound's rules instead of vanilla's all-or-nothing
+  check, and is tinted to match its portal.
+- Biome portals deliberately do NOT set m_allowAllItems. Other portal mods read that flag
+  as "no restrictions" and skip their own safeguards, which would have made these portals
+  more permissive than vanilla rather than less.
+
 ## 0.2.2
 - Fix biome portals never connecting. Game.Awake builds PortalPrefabHash from a
   serialized prefab list, and ZDOMan gates every portal path on it, so a portal whose

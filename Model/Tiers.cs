@@ -47,6 +47,9 @@ namespace Tollbound.Model
     {
         internal BiomeTier Tier;
 
+        /// <summary>Biome name as it appears in player-facing messages.</summary>
+        internal string BiomeName;
+
         /// <summary>Prefab name of the portal piece this mod creates for the tier.</summary>
         internal string PortalPrefab;
 
@@ -97,6 +100,7 @@ namespace Tollbound.Model
             new TierInfo
             {
                 Tier = BiomeTier.BlackForest,
+                BiomeName = "Black Forest",
                 PortalPrefab = "portal_tollbound_blackforest",
                 NameToken = "$piece_tollbound_blackforest",
                 DisplayName = "Portal - Black Forest",
@@ -115,6 +119,7 @@ namespace Tollbound.Model
             new TierInfo
             {
                 Tier = BiomeTier.Swamp,
+                BiomeName = "Swamp",
                 PortalPrefab = "portal_tollbound_swamp",
                 NameToken = "$piece_tollbound_swamp",
                 DisplayName = "Portal - Swamp",
@@ -134,6 +139,7 @@ namespace Tollbound.Model
             new TierInfo
             {
                 Tier = BiomeTier.Mountain,
+                BiomeName = "Mountain",
                 PortalPrefab = "portal_tollbound_mountain",
                 NameToken = "$piece_tollbound_mountain",
                 DisplayName = "Portal - Mountain",
@@ -153,6 +159,7 @@ namespace Tollbound.Model
             new TierInfo
             {
                 Tier = BiomeTier.Plains,
+                BiomeName = "Plains",
                 PortalPrefab = "portal_tollbound_plains",
                 NameToken = "$piece_tollbound_plains",
                 DisplayName = "Portal - Plains",
@@ -171,6 +178,7 @@ namespace Tollbound.Model
             new TierInfo
             {
                 Tier = BiomeTier.Mistlands,
+                BiomeName = "Mistlands",
                 PortalPrefab = "portal_tollbound_mistlands",
                 NameToken = "$piece_tollbound_mistlands",
                 DisplayName = "Portal - Mistlands",
@@ -191,6 +199,7 @@ namespace Tollbound.Model
             new TierInfo
             {
                 Tier = BiomeTier.Ashlands,
+                BiomeName = "Ashlands",
                 PortalPrefab = "portal_tollbound_ashlands",
                 NameToken = "$piece_tollbound_ashlands",
                 DisplayName = "Portal - Ashlands",
