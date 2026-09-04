@@ -41,11 +41,11 @@ namespace Tollbound.Config
                 "game actually contains rather than assumed prefab names.");
 
             IdleGlowIntensity = cfg.Bind(
-                "Appearance", "IdleGlowIntensity", 0.6f,
+                "Appearance", "IdleGlowIntensity", 2f,
                 new ConfigDescription(
                     "Brightness of a biome portal's glow while it has no partner. Vanilla " +
                     "portals sit at 0 (unlit) until they pair; a low value here keeps each " +
-                    "portal identifiable by colour across a base. Visual only.",
+                    "portal identifiable by colour across a base. Values above 1 bloom. Visual only.",
                     new AcceptableValueRange<float>(0f, 5f)));
 
             ConnectedGlowIntensity = cfg.Bind(

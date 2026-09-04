@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2
+- Fix biome portals never connecting. Game.Awake builds PortalPrefabHash from a
+  serialized prefab list, and ZDOMan gates every portal path on it, so a portal whose
+  hash is absent is never added to m_portalObjects and ConnectPortals never sees it.
+  Tollbound's prefabs now register themselves as portals.
+- Raise the default unconnected glow from 0.6 to 2.0, which is above the bloom
+  threshold. Existing configs keep their own value; edit IdleGlowIntensity to change it.
+
 ## 0.2.1
 - Fix the plugin failing to load at all: TierInfo.Recipe used a C# value tuple, which
   compiles against the net462 reference assemblies but has no System.ValueTuple at
