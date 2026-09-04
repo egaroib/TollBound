@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+- Fix the plugin failing to load at all: TierInfo.Recipe used a C# value tuple, which
+  compiles against the net462 reference assemblies but has no System.ValueTuple at
+  runtime under Valheim's Mono. The type initializer threw during Awake, before any
+  pieces or patches were registered, so no portals appeared in the build menu.
+
 ## 0.2.0
 - Six biome portal pieces, cloned from the vanilla wood portal and tinted per biome.
 - Cargo tier model covering all 26 non-teleportable items, with per-tier toll and loss

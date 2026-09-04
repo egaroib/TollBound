@@ -3,14 +3,20 @@
   <PropertyGroup>
     <AssemblyName>Tollbound</AssemblyName>
     <RootNamespace>Tollbound</RootNamespace>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Description>A Valheim mod.</Description>
     <Authors>RAGEmedia</Authors>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Lets net462 compile on Linux without Mono. -->
+    <!-- Lets net462 compile on Linux without Mono.
+
+         Note that these reference assemblies are broader than what Valheim's Mono runtime
+         actually ships. System.ValueTuple in particular resolves at compile time and is
+         absent at runtime, so value tuples, records and Span<T> compile cleanly and then
+         throw TypeLoadException on first use. Prefer plain classes in types the game will
+         load. -->
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
     <!-- Rewrites referenced game assemblies so private members are reachable. -->
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
