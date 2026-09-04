@@ -158,18 +158,19 @@ namespace Tollbound.Gameplay
 
             foreach (var lot in verdict.Manifest.Lots)
             {
-                if (!lot.Destructible || BossIsDead(lot.Tier))
-                {
-                    continue;
-                }
-
+                var bossDead = BossIsDead(lot.Tier);
                 var rate = TollboundConfig.LossRate(lot.Tier);
-                if (rate <= 0f)
-                {
-                    continue;
-                }
+                var eligible = lot.Destructible && !bossDead && rate > 0f;
+                var lost = eligible ? RollLosses(lot.Count, rate) : 0;
 
-                var lost = RollLosses(lot.Count, rate);
+                // Logged for every lot, including skipped ones. "Rolled and came up empty"
+                // and "never rolled at all" look identical in game, and at these rates a
+                // small haul losing nothing is the most likely single outcome.
+                TollboundPlugin.LogVerbose(
+                    $"Loss check {lot.Prefab} x{lot.Count} ({lot.Tier}): " +
+                    $"destructible={lot.Destructible}, bossDead={bossDead}, rate={rate:0.###} " +
+                    $"-> {(eligible ? lost + " lost" : "skipped")}");
+
                 if (lost <= 0)
                 {
                     continue;

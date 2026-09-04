@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+- Loss rolls now log every lot under VerboseLogging, including skipped ones, so that
+  "rolled and came up empty" can be told apart from "never rolled". At these rates a
+  small haul losing nothing is the single most likely outcome, which makes a working
+  mechanic look broken.
+
 ## 0.4.0
 - Portal hover text now names the crossing: this portal's tier, the tier on the far end,
   and what the pair actually carries. Adds the toll due, what a living boss puts at risk,
