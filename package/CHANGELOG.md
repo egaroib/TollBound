@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0
+- The spirits speak. A crossing that is refused or paid for now draws a centre-screen line
+  composed from two pools: an atmospheric opener and a demand, each a complete sentence, so
+  six of each gives thirty-six combinations. Tone shifts once a biome's boss is dead.
+- Lines live in BepInEx/config/Tollbound/voice.txt, written on first run and never
+  overwritten. Add or edit lines without reinstalling; a new [mountain.restless.opener]
+  section starts being used immediately.
+- Black Forest and Swamp are fully voiced. Every other spirit uses the generic [fallback]
+  pool until authored.
+- New Appearance/SpiritDialogue setting turns the centre lines off, leaving only the
+  itemised ledger.
+
 ## 0.4.1
 - Loss rolls now log every lot under VerboseLogging, including skipped ones, so that
   "rolled and came up empty" can be told apart from "never rolled". At these rates a

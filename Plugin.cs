@@ -22,7 +22,7 @@ namespace Tollbound
     {
         public const string PluginGuid = "com.ragemedia.tollbound";
         public const string PluginName = "Tollbound";
-        public const string PluginVersion = "0.4.1";
+        public const string PluginVersion = "0.5.0";
 
         internal static TollboundPlugin Instance;
 
@@ -32,6 +32,7 @@ namespace Tollbound
         {
             Instance = this;
             BindConfig();
+            Messages.VoiceBook.Load();
             _harmony.PatchAll(Assembly.GetExecutingAssembly());
             VerifyPatches();
 

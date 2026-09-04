@@ -15,6 +15,8 @@ namespace Tollbound.Config
         internal static ConfigEntry<bool> VerboseLogging;
         internal static ConfigEntry<bool> WriteItemReport;
 
+        internal static ConfigEntry<bool> SpiritDialogue;
+
         internal static ConfigEntry<float> IdleGlowIntensity;
         internal static ConfigEntry<float> ConnectedGlowIntensity;
 
@@ -39,6 +41,13 @@ namespace Tollbound.Config
                 "Write BepInEx/config/Tollbound/item-report.md on game start, listing every " +
                 "non-teleportable item in this install. Used to tier cargo against what the " +
                 "game actually contains rather than assumed prefab names.");
+
+            SpiritDialogue = cfg.Bind(
+                "Appearance", "SpiritDialogue", true,
+                "Show the spirits' centre-screen lines when a crossing is refused or paid " +
+                "for. Turn off to keep only the itemised top-left ledger. Lines live in " +
+                "BepInEx/config/Tollbound/voice.txt and can be edited or added to without " +
+                "reinstalling. Local only.");
 
             IdleGlowIntensity = cfg.Bind(
                 "Appearance", "IdleGlowIntensity", 2f,
