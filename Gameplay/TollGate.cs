@@ -14,6 +14,9 @@ namespace Tollbound.Gameplay
 
         /// <summary>A spirit's toll is not in the pack.</summary>
         TollUnpaid,
+
+        /// <summary>Carrying something the game restricts that Tollbound has no tier for.</summary>
+        Unrecognized,
     }
 
     /// <summary>A toll owed to one biome's spirit for this crossing.</summary>
@@ -48,6 +51,9 @@ namespace Tollbound.Gameplay
         /// <summary>Set when Refusal is TollUnpaid.</summary>
         internal TollDue Unaffordable;
 
+        /// <summary>Set when Refusal is Unrecognized.</summary>
+        internal string UnrecognizedItem;
+
         internal readonly List<TollDue> Tolls = new List<TollDue>();
         internal Manifest Manifest;
     }
@@ -74,6 +80,15 @@ namespace Tollbound.Gameplay
             if (verdict.Manifest.IsEmpty)
             {
                 verdict.Allowed = true;
+                return verdict;
+            }
+
+            // Fail closed on anything the game restricts but Tollbound cannot price. A
+            // game update adding a new ore should refuse, not quietly travel free.
+            if (verdict.Manifest.Unrecognized.Count > 0)
+            {
+                verdict.Refusal = Refusal.Unrecognized;
+                verdict.UnrecognizedItem = verdict.Manifest.Unrecognized[0];
                 return verdict;
             }
 

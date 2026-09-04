@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0
+- Portal hover text now names the crossing: this portal's tier, the tier on the far end,
+  and what the pair actually carries. Adds the toll due, what a living boss puts at risk,
+  and what is blocking the crossing when something is.
+- The inventory no-teleport slash now reflects the nearby portal instead of the vanilla
+  all-or-nothing flag: it clears from cargo the crossing accepts and stays on the rest.
+- Cargo the game restricts but Tollbound has no tier for is now refused rather than
+  carried free. A game update adding a new ore fails closed instead of opening a hole.
+
 ## 0.3.0
 - Portals of different tiers now connect freely. A crossing carries the LOWER of its two
   ends, so a Swamp portal linked to a Black Forest one is a Black Forest crossing both

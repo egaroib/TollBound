@@ -131,6 +131,10 @@ namespace Tollbound.Patches
                 return;
             }
 
+            // Recorded here so the inventory icons can answer the same question without
+            // repeating the proximity search.
+            NearbyPortal.Report(__instance, distance);
+
             var far = PortalIdentity.TierOfFarEnd(__instance);
             var verdict = TollGate.Evaluate(player, near, far);
 

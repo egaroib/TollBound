@@ -27,6 +27,13 @@ namespace Tollbound.Messages
                     TopLeft(player, CeilingExplanation(verdict));
                     break;
 
+                case Refusal.Unrecognized:
+                    Centre(player, "The way will not take it.");
+                    TopLeft(player,
+                        $"{Item(verdict.UnrecognizedItem)} answers to no spirit here. " +
+                        "It cannot cross.");
+                    break;
+
                 case Refusal.TollUnpaid:
                     var toll = verdict.Unaffordable;
                     var spirit = SpiritOf(toll.Tier);

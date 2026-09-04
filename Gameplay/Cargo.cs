@@ -23,7 +23,15 @@ namespace Tollbound.Gameplay
     {
         internal readonly List<CargoLot> Lots = new List<CargoLot>();
 
-        internal bool IsEmpty => Lots.Count == 0;
+        /// <summary>
+        /// Items the game marks non-teleportable that Tollbound has no tier for, usually
+        /// because a game update or another mod added them. The crossing fails closed on
+        /// these: letting an unrecognised ore travel free would be a silent hole, and
+        /// vanilla would have refused it anyway.
+        /// </summary>
+        internal readonly List<string> Unrecognized = new List<string>();
+
+        internal bool IsEmpty => Lots.Count == 0 && Unrecognized.Count == 0;
 
         /// <summary>Distinct tiers represented, lowest first, so tolls read in progression order.</summary>
         internal List<BiomeTier> TiersPresent =>
@@ -56,6 +64,12 @@ namespace Tollbound.Gameplay
                 var tier = CargoRegistry.TierOfItem(prefab);
                 if (tier == BiomeTier.None)
                 {
+                    var restrictedByGame = item.m_shared != null && !item.m_shared.m_teleportable;
+                    if (restrictedByGame && !manifest.Unrecognized.Contains(prefab))
+                    {
+                        manifest.Unrecognized.Add(prefab);
+                    }
+
                     continue;
                 }
 
