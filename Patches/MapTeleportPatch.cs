@@ -63,4 +63,43 @@ namespace Tollbound.Patches
             return true;
         }
     }
+
+    /// <summary>
+    /// Stops TargetPortal refusing a crossing before Tollbound has had a say.
+    ///
+    /// Its click handler asks Player.IsTeleportable() first, which is vanilla's
+    /// all-or-nothing check — so a Swamp portal with iron in your pack was refused with
+    /// "item in inventory won't allow me to teleport" and the real gate never ran. Setting
+    /// m_allowAllItems on the piece would make it skip that check, but portal mods read
+    /// that flag as "no restrictions at all", which is exactly what must not happen.
+    ///
+    /// Instead the answer is deferred: while TargetPortal is mid-click at a biome portal,
+    /// this reports teleportable and lets MapTeleportPatch make the real decision a moment
+    /// later, with the destination known. Scoped to that instant and to the local player's
+    /// own inventory, so nothing else sees a changed answer.
+    /// </summary>
+    [HarmonyPatch(typeof(Inventory), nameof(Inventory.IsTeleportable))]
+    internal static class MapTeleportableDeferPatch
+    {
+        private static void Postfix(Inventory __instance, ref bool __result)
+        {
+            if (__result || !TargetPortalBridge.MapCrossingInProgress)
+            {
+                return;
+            }
+
+            var player = Player.m_localPlayer;
+            if (player == null || __instance != player.GetInventory())
+            {
+                return;
+            }
+
+            if (PortalIdentity.TierOf(NearbyPortal.Current) == BiomeTier.None)
+            {
+                return;
+            }
+
+            __result = true;
+        }
+    }
 }

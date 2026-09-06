@@ -91,8 +91,13 @@ namespace Tollbound.Gameplay
                 var tier = CargoRegistry.TierOfItem(prefab);
                 if (tier == BiomeTier.None)
                 {
-                    var restrictedByGame = item.m_shared != null && !item.m_shared.m_teleportable;
-                    if (restrictedByGame && !manifest.Unrecognized.Contains(prefab))
+                    // Deliberately the prefab's flag rather than this instance's. Backpack
+                    // mods clone an item's shared data and mark the pack itself
+                    // non-teleportable while it holds ore, so trusting the instance made a
+                    // loaded backpack look like one giant piece of mystery contraband.
+                    // A prefab that ships non-teleportable is real cargo; an instance that
+                    // merely became so is another mod's business.
+                    if (IsRestrictedByGame(prefab) && !manifest.Unrecognized.Contains(prefab))
                     {
                         manifest.Unrecognized.Add(prefab);
                     }

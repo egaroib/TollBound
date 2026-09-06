@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.1
+- Fix a backpack holding restricted cargo being refused outright. Backpack mods mark the
+  pack itself non-teleportable while it holds ore, and Tollbound was reading that as one
+  giant piece of unrecognised contraband. It now asks the item's prefab rather than the
+  carried instance.
+- Fix TargetPortal refusing every crossing with "item in inventory won't allow me to
+  teleport". Its click handler asks the game's all-or-nothing teleport check before
+  Tollbound is consulted, so the real gate never ran.
+- Backpacks (blaxxun) cargo is now read from the real inventories its API exposes rather
+  than queried item name by item name. Faster, and unrecognised items inside those packs
+  are no longer invisible.
+
 ## 0.10.0
 - TargetPortal support. Warping from a biome portal to a map pin is now gated exactly like
   walking through one: same ceiling from both ends, same tolls, same loss rolls.

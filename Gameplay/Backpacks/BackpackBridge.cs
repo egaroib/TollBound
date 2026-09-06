@@ -33,11 +33,10 @@ namespace Tollbound.Gameplay.Backpacks
         private static MethodInfo _abGetEquipped;
         private static FieldInfo _abInventoryField;
 
-        // Backpacks (blaxxun): no way to obtain the nested Inventory without reaching into
-        // ItemDataManager types it renames at build time, so its own count/delete API is
-        // used instead. That API matches on the localisation token rather than the prefab
-        // name, hence TokenFor below.
-        private static MethodInfo _bxCount;
+        // Backpacks (blaxxun): hands back real Inventory objects too. Removal still goes
+        // through its own API, because it persists a changed pack and a direct RemoveItem
+        // would not.
+        private static MethodInfo _bxInventories;
         private static MethodInfo _bxDelete;
 
         private static readonly Dictionary<string, string> TokenCache =
@@ -45,7 +44,7 @@ namespace Tollbound.Gameplay.Backpacks
 
         internal static bool AdventureBackpacksLoaded => _abGetEquipped != null;
 
-        internal static bool BlaxxunBackpacksLoaded => _bxCount != null;
+        internal static bool BlaxxunBackpacksLoaded => _bxInventories != null;
 
         internal static bool AnyLoaded => AdventureBackpacksLoaded || BlaxxunBackpacksLoaded;
 
@@ -118,12 +117,12 @@ namespace Tollbound.Gameplay.Backpacks
 
             try
             {
-                _bxCount = api.GetMethod("CountItemsInBackpacks",
-                    new[] { typeof(Inventory), typeof(string), typeof(bool) });
+                _bxInventories = api.GetMethod("GetAllBackpackInventories",
+                    new[] { typeof(Inventory) });
                 _bxDelete = api.GetMethod("DeleteItemsFromBackpacks",
                     new[] { typeof(Inventory), typeof(string), typeof(int) });
 
-                if (_bxCount == null || _bxDelete == null)
+                if (_bxInventories == null || _bxDelete == null)
                 {
                     Unbind("Backpacks", "expected API methods were not found");
                 }
@@ -147,7 +146,7 @@ namespace Tollbound.Gameplay.Backpacks
             }
             else
             {
-                _bxCount = _bxDelete = null;
+                _bxInventories = _bxDelete = null;
             }
         }
 
@@ -159,7 +158,33 @@ namespace Tollbound.Gameplay.Backpacks
         {
             var found = new List<Inventory>();
 
-            if (!AdventureBackpacksLoaded || player == null)
+            if (player == null)
+            {
+                return found;
+            }
+
+            if (BlaxxunBackpacksLoaded)
+            {
+                try
+                {
+                    var list = _bxInventories.Invoke(null, new object[] { player.GetInventory() })
+                        as IEnumerable<Inventory>;
+
+                    if (list != null)
+                    {
+                        foreach (var inventory in list)
+                        {
+                            Add(found, inventory);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    TollboundPlugin.LogVerbose($"Backpacks read failed: {e.Message}");
+                }
+            }
+
+            if (!AdventureBackpacksLoaded)
             {
                 return found;
             }
@@ -245,19 +270,6 @@ namespace Tollbound.Gameplay.Backpacks
                 }
             }
 
-            if (!BlaxxunBackpacksLoaded)
-            {
-                return;
-            }
-
-            foreach (var prefab in CargoRegistry.AllCargo)
-            {
-                var held = CountViaToken(player, prefab);
-                if (held > 0)
-                {
-                    onCargo(prefab, held);
-                }
-            }
         }
 
         /// <summary>Units of one prefab held across every backpack the player carries.</summary>
@@ -268,12 +280,10 @@ namespace Tollbound.Gameplay.Backpacks
                 return 0;
             }
 
-            var total = OpenInventories(player)
+            return OpenInventories(player)
                 .Sum(inv => inv.GetAllItems()
                     .Where(i => PortalIdentity.PrefabNameOf(i) == prefabName)
                     .Sum(i => i.m_stack));
-
-            return total + CountViaToken(player, prefabName);
         }
 
         /// <summary>
@@ -288,6 +298,10 @@ namespace Tollbound.Gameplay.Backpacks
             }
 
             var taken = 0;
+
+            // Backpacks (blaxxun) persists a changed pack only through its own delete call,
+            // so that one is asked first and directly-removable packs pick up the rest.
+            taken += RemoveViaToken(player, prefabName, amount);
 
             foreach (var inventory in OpenInventories(player))
             {
@@ -309,39 +323,7 @@ namespace Tollbound.Gameplay.Backpacks
                 }
             }
 
-            if (taken < amount)
-            {
-                taken += RemoveViaToken(player, prefabName, amount - taken);
-            }
-
             return taken;
-        }
-
-        private static int CountViaToken(Player player, string prefabName)
-        {
-            if (!BlaxxunBackpacksLoaded)
-            {
-                return 0;
-            }
-
-            var token = TokenFor(prefabName);
-            if (token == null)
-            {
-                return 0;
-            }
-
-            try
-            {
-                // onlyRemoveable: false. Anything being carried is subject to the rules,
-                // whether or not the pack would let you take it back out.
-                return (int)_bxCount.Invoke(null,
-                    new object[] { player.GetInventory(), token, false });
-            }
-            catch (Exception e)
-            {
-                TollboundPlugin.LogVerbose($"Backpacks count failed: {e.Message}");
-                return 0;
-            }
         }
 
         private static int RemoveViaToken(Player player, string prefabName, int amount)
@@ -359,13 +341,13 @@ namespace Tollbound.Gameplay.Backpacks
 
             try
             {
-                var before = CountViaToken(player, prefabName);
+                var before = Count(player, prefabName);
                 _bxDelete.Invoke(null, new object[] { player.GetInventory(), token, amount });
 
                 // Measured rather than assumed: the API declines the whole operation when
                 // it cannot satisfy the count, and reporting a loss that did not happen
                 // would tell the player they lost ore they still have.
-                return Math.Max(0, before - CountViaToken(player, prefabName));
+                return Math.Max(0, before - Count(player, prefabName));
             }
             catch (Exception e)
             {
