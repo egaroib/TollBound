@@ -13,6 +13,11 @@
   are no longer invisible.
 
 ## 0.10.0
+- Backpack support. Cargo inside a backpack now counts toward the crossing's ceiling, is
+  priced into the toll, and can be destroyed by a loss roll. Previously it crossed free:
+  Tollbound read the player's own inventory, and a backpack holds its contents in a nested
+  inventory that walk never touched. Works with AdventureBackpacks and Backpacks (blaxxun),
+  both soft dependencies bound by reflection. Tolls come from your own inventory first.
 - TargetPortal support. Warping from a biome portal to a map pin is now gated exactly like
   walking through one: same ceiling from both ends, same tolls, same loss rolls.
 - The gate sits on the game's own TeleportTo and only acts while TargetPortal is handling a
