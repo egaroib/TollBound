@@ -53,6 +53,7 @@ namespace Tollbound.Messages
                 }
 
                 Parse(File.ReadAllText(path));
+                MergeNewSections(path);
                 IsLoaded = true;
 
                 var lines = 0;
@@ -70,6 +71,70 @@ namespace Tollbound.Messages
                 TollboundPlugin.LogError($"Could not load spirit lines, falling back to silence: {e.Message}");
                 IsLoaded = false;
             }
+        }
+
+        /// <summary>
+        /// Adds any section the shipped defaults have and the player's file does not.
+        ///
+        /// The file is written once and never overwritten, so hand edits survive updates —
+        /// but that also means a spirit voiced in a later version would never reach anyone
+        /// who already had a file. Merging by whole section keeps both: existing sections
+        /// are left exactly as the player left them, and only genuinely new ones are added.
+        ///
+        /// The cost is that deleting a section to silence a spirit will not stick. Emptying
+        /// it does, which the file header explains.
+        /// </summary>
+        private static void MergeNewSections(string path)
+        {
+            var missing = new List<string>();
+            var appended = new List<string>();
+            string key = null;
+
+            foreach (var raw in DefaultVoice.Text.Split('\n'))
+            {
+                var line = raw.Trim();
+
+                if (line.Length == 0 || line[0] == '#')
+                {
+                    continue;
+                }
+
+                if (line[0] == '[' && line[line.Length - 1] == ']')
+                {
+                    key = line.Substring(1, line.Length - 2).Trim().ToLowerInvariant();
+
+                    if (Pools.ContainsKey(key))
+                    {
+                        key = null;
+                        continue;
+                    }
+
+                    missing.Add(key);
+                    appended.Add("");
+                    appended.Add("[" + key + "]");
+                    Pools[key] = new List<string>();
+                    continue;
+                }
+
+                if (key != null)
+                {
+                    appended.Add(line);
+                    Pools[key].Add(line);
+                }
+            }
+
+            if (missing.Count == 0)
+            {
+                return;
+            }
+
+            File.AppendAllText(path,
+                "\n\n# Added by a Tollbound update. Edit freely; this file is never rewritten.\n"
+                + string.Join("\n", appended.ToArray()) + "\n");
+
+            TollboundPlugin.LogInfo(
+                $"Added {missing.Count} new spirit section(s) to voice.txt: " +
+                string.Join(", ", missing.ToArray()));
         }
 
         private static void Parse(string text)

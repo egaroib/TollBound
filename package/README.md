@@ -43,6 +43,13 @@ Losses are rolled once per unit, so a large haul loses roughly the listed share.
 By default a toll covers a crossing regardless of how much you carry. Servers wanting more
 friction can switch `Tolls/Scaling` to `PerLoad`, which charges a toll for every stack.
 
+## The spirits
+
+Each biome's spirit speaks when a crossing is refused or paid for, in its own register —
+and changes tone once you have killed it. Lines live in
+`BepInEx/config/Tollbound/voice.txt` and can be edited or added to without reinstalling.
+The file is never rewritten, so your edits survive updates.
+
 ## Requirements
 
 - [BepInExPack Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim/)

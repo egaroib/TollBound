@@ -30,6 +30,10 @@ namespace Tollbound.Messages
 #      assembled, never joined, so any opener can precede any demand.
 #   2. NEVER put an item name, a count or a number in a line. Those live in the
 #      separate ledger message. This is what makes broken grammar impossible.
+#
+# This file is never rewritten, so your edits are safe. Updates only append
+# sections that are missing entirely. To silence a spirit, empty its section
+# rather than deleting it -- a deleted section counts as missing and comes back.
 
 
 # ---------------------------------------------------------------- Black Forest
@@ -128,6 +132,210 @@ The mire outlived him. So did the toll.
 [swamp.sated.toll]
 Bonemass takes his share and lets you go.
 The mud accepts it, as it always has.
+
+
+# -------------------------------------------------------------------- Mountain
+
+[mountain.restless.opener]
+Wind screams down the ridge.
+Frost creeps across the stones.
+A shadow crosses the snow. Nothing casts it.
+The cold finds the seams in your pack.
+Something wheels, far above the cloud.
+The air thins, and keeps thinning.
+
+[mountain.restless.refused]
+The peak will not let that pass.
+Too heavy for this thin air.
+She has seen it, and she says no.
+The way narrows. That does not fit.
+
+[mountain.restless.unpaid]
+Moder counts what you carry.
+The mountain takes its share in glands.
+Pay the cold, or climb down.
+Nothing crosses her sky for free.
+
+[mountain.restless.toll]
+Moder takes her share.
+The wind drops, briefly.
+Something above is satisfied.
+Paid. The cold lets go of you.
+
+[mountain.sated.opener]
+The ridge is silent.
+No shadow crosses the snow now.
+The wind is only wind.
+Frost gathers, and nothing watches it.
+The peak keeps its own counsel.
+
+[mountain.sated.refused]
+Even her death did not open that.
+The mountain is older than she was.
+Still no. Some things do not fly.
+
+[mountain.sated.unpaid]
+Her nest is cold. The toll is not.
+The peak collects for her.
+Pay it. She is beyond spending it.
+
+[mountain.sated.toll]
+The mountain takes what she is owed.
+Paid, to nothing in particular.
+The wind lets you through.
+
+
+# ---------------------------------------------------------------------- Plains
+
+[plains.restless.opener]
+Ash drifts across the barrow.
+Something buried grinds against stone.
+Heat rises off the grass with no sun to give it.
+The tar goes still.
+A hand's shadow falls where there is no hand.
+The ground remembers a weight.
+
+[plains.restless.refused]
+The ruined king will not permit it.
+That is not yours to carry out.
+His hand closes. The way with it.
+Refused, and not gently.
+
+[plains.restless.unpaid]
+Yagluth's hand still closes. Pay it.
+The ruined king demands tribute.
+Black metal answers to him first.
+Tribute, or turn around.
+
+[plains.restless.toll]
+Yagluth takes his tribute.
+The ash settles, satisfied.
+The buried hand opens.
+Paid to a king who has no kingdom.
+
+[plains.sated.opener]
+The barrow is quiet at last.
+Ash falls and stays fallen.
+Nothing stirs under the stones.
+The tar lies flat and cold.
+The plains are only grass now.
+
+[plains.sated.refused]
+Broken as he is, not that.
+The ruin holds its last rule.
+Even now his hand is closed on this.
+
+[plains.sated.unpaid]
+A dead king still takes tribute.
+Pay the ruin. It does not forgive.
+His hand is dust. It is still open.
+
+[plains.sated.toll]
+The ruin takes its tribute.
+Ash accepts, as ash does.
+Paid, and the way is clear.
+
+
+# ------------------------------------------------------------------- Mistlands
+
+[mistlands.restless.opener]
+The mist thickens without wind.
+Ten thousand small sounds stop at once.
+Something in the fog counts you.
+The stone hums a note you cannot hold.
+Wings, somewhere, out of time with each other.
+The fog leans closer.
+
+[mistlands.restless.refused]
+The hive will not pass it.
+She has weighed it and found it hers.
+Not through her mist.
+The counting stops. So do you.
+
+[mistlands.restless.unpaid]
+The Queen's brood attends the ledger.
+The hive marks what leaves the mist.
+Nothing crosses without her leave.
+Pay her, or be counted twice.
+
+[mistlands.restless.toll]
+The Queen takes her portion.
+The counting resumes.
+Something in the fog is content.
+The mist opens, precisely.
+
+[mistlands.sated.opener]
+The mist drifts, and nothing moves in it.
+The small sounds are only insects now.
+The fog has stopped counting.
+Nothing hums in the stone.
+The Mistlands keep their quiet.
+
+[mistlands.sated.refused]
+Her hive is dead. Its rules are not.
+Still counted. Still refused.
+Not even now.
+
+[mistlands.sated.unpaid]
+The brood keeps her books.
+Pay what she is no longer here to take.
+The ledger outlived the Queen.
+
+[mistlands.sated.toll]
+The hive takes its portion.
+The mist parts, out of habit.
+Paid, and counted, and let by.
+
+
+# -------------------------------------------------------------------- Ashlands
+
+[ashlands.restless.opener]
+Embers rise where there is no fire.
+The ground beneath goes hot.
+Something enormous draws breath.
+Ash falls upward for a moment.
+The stone under your boots ticks as it cools.
+Far off, something turns in the fire.
+
+[ashlands.restless.refused]
+The last flame refuses it.
+That does not leave the burning.
+Fader will not have it carried.
+The fire closes over the way.
+
+[ashlands.restless.unpaid]
+Fader knows the weight of flametal.
+The ash keeps a tally.
+The last flame takes its portion. Pay it.
+Nothing leaves the fire unweighed.
+
+[ashlands.restless.toll]
+Fader takes his portion.
+The embers settle.
+Something enormous lets out its breath.
+The fire allows it.
+
+[ashlands.sated.opener]
+The ash falls straight down.
+Nothing breathes in the deep fire.
+The ground has gone cool enough to stand on.
+The embers rise and go out.
+The burning is only burning now.
+
+[ashlands.sated.refused]
+The fire is out. The rule is not.
+Even ended, he will not have it.
+Not through the ash.
+
+[ashlands.sated.unpaid]
+The ash still tallies.
+Pay the fire that killed him.
+He is ash. The toll is not.
+
+[ashlands.sated.toll]
+The ash takes its portion.
+Paid to the last flame, long gone out.
+The fire lets you through.
 
 
 # -------------------------------------------------------------------- fallback

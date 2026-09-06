@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0
+- All six spirits are now voiced. Moder, Yagluth, the Queen and Fader join the Elder and
+  Bonemass, each with its own vocabulary and its own shift in tone once its boss is dead.
+  210 authored lines, and 24 distinct centre-screen messages per situation per spirit.
+- voice.txt now gains sections added by updates instead of missing them. The file is still
+  never rewritten, so existing lines and edits are untouched; only sections absent
+  entirely are appended. To silence a spirit, empty its section rather than deleting it.
+
 ## 0.7.1
 - Loss rates raised after play testing: 8 / 11 / 14 / 17 / 22 percent, up from
   5 / 7 / 9 / 11 / 15. A sixty-unit haul now loses about five ore in the Black Forest
