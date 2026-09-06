@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0
+- TargetPortal support. Warping from a biome portal to a map pin is now gated exactly like
+  walking through one: same ceiling from both ends, same tolls, same loss rolls.
+- The gate sits on the game's own TeleportTo and only acts while TargetPortal is handling a
+  click, so none of that mod's logic is replaced and other portal mods that warp the same
+  way should be covered too.
+- Leaving a wood or stone portal by map is untouched, as before.
+
 ## 0.8.0
 - All six spirits are now voiced. Moder, Yagluth, the Queen and Fader join the Elder and
   Bonemass, each with its own vocabulary and its own shift in tone once its boss is dead.

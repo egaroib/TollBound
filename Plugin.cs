@@ -20,6 +20,8 @@ namespace Tollbound
         BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency(Gameplay.Backpacks.BackpackBridge.BlaxxunBackpacksGuid,
         BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(Gameplay.Portals.TargetPortalBridge.Guid,
+        BepInDependency.DependencyFlags.SoftDependency)]
     // EveryoneMustHaveMod: clients without this mod are refused, instead of silently
     // desyncing. Drop to NotEnforced only for purely local, presentation-only mods.
     // See references/multiplayer.md.
@@ -28,18 +30,18 @@ namespace Tollbound
     {
         public const string PluginGuid = "com.ragemedia.tollbound";
         public const string PluginName = "Tollbound";
-        public const string PluginVersion = "0.8.0";
+        public const string PluginVersion = "0.10.0";
 
         internal static TollboundPlugin Instance;
 
-        private readonly Harmony _harmony = new Harmony(PluginGuid);
+        internal readonly Harmony Harmony = new Harmony(PluginGuid);
 
         private void Awake()
         {
             Instance = this;
             BindConfig();
             Messages.VoiceBook.Load();
-            _harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Harmony.PatchAll(Assembly.GetExecutingAssembly());
             VerifyPatches();
 
             // Pieces are cloned from portal_wood, so they cannot be built until the vanilla
@@ -53,7 +55,7 @@ namespace Tollbound
         {
             PrefabManager.OnVanillaPrefabsAvailable -= OnVanillaPrefabsAvailable;
             ItemManager.OnItemsRegistered -= OnItemsRegistered;
-            _harmony?.UnpatchSelf();
+            Harmony?.UnpatchSelf();
         }
 
         private static void OnVanillaPrefabsAvailable()
@@ -66,6 +68,7 @@ namespace Tollbound
             Model.CargoRegistry.Build();
             TollboundConfig.ResolveTollItems();
             Gameplay.Backpacks.BackpackBridge.Bind();
+            Gameplay.Portals.TargetPortalBridge.Bind(Instance.Harmony);
 
             if (TollboundConfig.WriteItemReport.Value)
             {
@@ -88,7 +91,7 @@ namespace Tollbound
         /// </summary>
         private void VerifyPatches()
         {
-            var bound = _harmony.GetPatchedMethods().ToList();
+            var bound = Harmony.GetPatchedMethods().ToList();
             LogInfo($"Harmony bound {bound.Count} target(s):");
             foreach (var m in bound)
             {

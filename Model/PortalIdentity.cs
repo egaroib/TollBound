@@ -44,6 +44,46 @@ namespace Tollbound.Model
         }
 
         /// <summary>
+        /// The tier of the portal nearest a world position, or None if there is none close
+        /// enough. Used to recover the far end of a map-based crossing, which never goes
+        /// through the connection a walked crossing uses.
+        /// </summary>
+        internal static BiomeTier TierOfPortalAt(Vector3 position)
+        {
+            if (ZDOMan.instance == null || ZNetScene.instance == null)
+            {
+                return BiomeTier.None;
+            }
+
+            // Generous, but far tighter than the gap between any two portals worth
+            // confusing: a map crossing lands a step in front of its destination.
+            const float maxDistanceSq = 25f;
+
+            ZDO closest = null;
+            var closestSq = maxDistanceSq;
+
+            foreach (var portal in ZDOMan.instance.GetPortals())
+            {
+                var distanceSq = (portal.GetPosition() - position).sqrMagnitude;
+                if (distanceSq >= closestSq)
+                {
+                    continue;
+                }
+
+                closest = portal;
+                closestSq = distanceSq;
+            }
+
+            if (closest == null)
+            {
+                return BiomeTier.None;
+            }
+
+            var prefab = ZNetScene.instance.GetPrefab(closest.GetPrefab());
+            return prefab == null ? BiomeTier.None : Tiers.TierOfPortal(prefab.name);
+        }
+
+        /// <summary>
         /// What a crossing will actually carry: the lower of the two ends.
         ///
         /// Portals of different tiers connect freely, so a Swamp portal linked to a Black
