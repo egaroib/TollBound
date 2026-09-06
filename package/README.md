@@ -40,6 +40,9 @@ is refused at the version handshake rather than allowed in to desync quietly.
 Tolls stack across every biome represented in your pack, not just the portal's own tier.
 Losses are rolled once per unit, so a large haul loses roughly the listed share.
 
+By default a toll covers a crossing regardless of how much you carry. Servers wanting more
+friction can switch `Tolls/Scaling` to `PerLoad`, which charges a toll for every stack.
+
 ## Requirements
 
 - [BepInExPack Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim/)
@@ -59,6 +62,8 @@ Settings live in `BepInEx/config/com.ragemedia.tollbound.cfg`, generated on firs
 | Diagnostics | `WriteItemReport` | no | Writes a survey of every non-teleportable item in your install to `BepInEx/config/Tollbound/item-report.md`. Useful when other mods add items Tollbound has no tier for. |
 | Appearance | `IdleGlowIntensity` | no | Brightness of a portal's glow before it pairs. Vanilla portals sit dark; the default keeps each biome tellable apart by colour. |
 | Appearance | `ConnectedGlowIntensity` | no | Brightness once connected. Vanilla uses 5. |
+| Tolls | `Scaling` | **admin** | `Flat` charges one toll per biome per crossing. `PerLoad` charges one toll for every `LoadSize` units, so bulk moves cost proportionally more. |
+| Tier – *biome* | `LoadSize` | **admin** | Units covered by one toll under `PerLoad`. Defaults to 30 — one ore stack. |
 | Tier – *biome* | `TollItem` | **admin** | Prefab name of the item that biome's spirit takes as passage. |
 | Tier – *biome* | `TollAmount` | **admin** | How many, per crossing. 0 makes that biome toll-free. |
 | Tier – *biome* | `LossRate` | **admin** | Per-unit chance that biome's ore or bars are destroyed while its boss lives. 0 disables it. |

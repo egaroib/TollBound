@@ -142,20 +142,21 @@ namespace Tollbound.Patches
 
             foreach (var tier in manifest.TiersPresent)
             {
-                var amount = TollboundConfig.TollAmount(tier);
-                var prefab = TollboundConfig.TollItem(tier);
-
-                if (amount <= 0 || string.IsNullOrEmpty(prefab))
+                // Priced through the gate's own method, so the quote and the charge cannot
+                // drift apart when scaling changes.
+                var toll = TollGate.Price(tier, manifest.UnitsOf(tier));
+                if (toll == null)
                 {
                     continue;
                 }
 
-                if (Cargo.Count(inventory, prefab) < amount)
+                if (Cargo.Count(inventory, toll.ItemPrefab) < toll.Amount)
                 {
                     short_ = true;
                 }
 
-                owed.Add($"{PortalIdentity.DisplayName(prefab)} x{amount}");
+                var entry = $"{PortalIdentity.DisplayName(toll.ItemPrefab)} x{toll.Amount}";
+                owed.Add(toll.Loads > 1 ? entry + $" ({toll.Loads} loads)" : entry);
             }
 
             if (owed.Count == 0)

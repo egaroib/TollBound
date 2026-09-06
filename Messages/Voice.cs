@@ -34,9 +34,12 @@ namespace Tollbound.Messages
                 case Refusal.TollUnpaid:
                     var toll = verdict.Unaffordable;
                     Speak(player, toll.Tier, VoiceSlot.Unpaid);
+                    var loads = toll.Loads > 1
+                        ? $" ({toll.Loads} loads at {toll.BaseAmount})"
+                        : "";
                     TopLeft(player,
                         $"{Capitalize(SpiritOf(toll.Tier))} demands {Item(toll.ItemPrefab)} " +
-                        $"x{toll.Amount}. You carry {toll.Held}.");
+                        $"x{toll.Amount}{loads}. You carry {toll.Held}.");
                     break;
 
                 case Refusal.Unrecognized:
@@ -57,8 +60,9 @@ namespace Tollbound.Messages
 
             foreach (var toll in verdict.Tolls)
             {
+                var loads = toll.Loads > 1 ? $" ({toll.Loads} loads)" : "";
                 TopLeft(player,
-                    $"{Item(toll.ItemPrefab)} x{toll.Amount} - paid to {SpiritOf(toll.Tier)}");
+                    $"{Item(toll.ItemPrefab)} x{toll.Amount} - paid to {SpiritOf(toll.Tier)}{loads}");
             }
 
             foreach (var loss in losses)

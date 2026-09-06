@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+- New Tolls/Scaling setting. Flat (default) keeps one toll per biome per crossing whatever
+  the haul. PerLoad charges one toll for every LoadSize units of that biome's cargo, so
+  moving a warehouse costs proportionally more and boats stay worth using for bulk.
+- LoadSize is per biome and defaults to 30, Valheim's own ore stack size, so the rule reads
+  as one toll per stack. Rounds up: a single unit over a stack is a second load.
+- Hover text and the ledger now price tolls through the gate's own calculation, so a quoted
+  price cannot drift from the charged one, and both show the load count when above one.
+
 ## 0.5.1
 - Surtling cores now scale across the ladder: 2, 3, 4, 6, 8, 10. They are already vanilla's
   portal ingredient, so a bigger portal wanting more core reads better than swapping in a

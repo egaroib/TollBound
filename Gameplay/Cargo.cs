@@ -43,6 +43,9 @@ namespace Tollbound.Gameplay
 
         internal IEnumerable<CargoLot> Of(BiomeTier tier) => Lots.Where(l => l.Tier == tier);
 
+        /// <summary>Total units of one biome's cargo, which is what a toll is priced against.</summary>
+        internal int UnitsOf(BiomeTier tier) => Of(tier).Sum(l => l.Count);
+
         internal static Manifest Build(Inventory inventory)
         {
             var manifest = new Manifest();

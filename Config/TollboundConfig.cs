@@ -4,6 +4,19 @@ using Tollbound.Model;
 
 namespace Tollbound.Config
 {
+    /// <summary>How a toll grows with the size of the haul.</summary>
+    internal enum TollScaling
+    {
+        /// <summary>One toll per biome per crossing, whatever you are carrying.</summary>
+        Flat,
+
+        /// <summary>
+        /// One toll per load. A load defaults to 30 units, which is Valheim's own ore
+        /// stack size, so the rule reads as "a toll per stack" rather than as arithmetic.
+        /// </summary>
+        PerLoad,
+    }
+
     /// <summary>
     /// Every value the mod can be tuned on. Anything that changes a game rule is bound
     /// admin-only, so a server dictates it and a client cannot quietly zero out its own
@@ -15,6 +28,8 @@ namespace Tollbound.Config
         internal static ConfigEntry<bool> VerboseLogging;
         internal static ConfigEntry<bool> WriteItemReport;
 
+        internal static ConfigEntry<TollScaling> Scaling;
+
         internal static ConfigEntry<bool> SpiritDialogue;
 
         internal static ConfigEntry<float> IdleGlowIntensity;
@@ -25,6 +40,7 @@ namespace Tollbound.Config
             internal ConfigEntry<string> TollItem;
             internal ConfigEntry<int> TollAmount;
             internal ConfigEntry<float> LossRate;
+            internal ConfigEntry<int> LoadSize;
         }
 
         private static readonly Dictionary<BiomeTier, TierEntries> PerTier =
@@ -41,6 +57,15 @@ namespace Tollbound.Config
                 "Write BepInEx/config/Tollbound/item-report.md on game start, listing every " +
                 "non-teleportable item in this install. Used to tier cargo against what the " +
                 "game actually contains rather than assumed prefab names.");
+
+            Scaling = cfg.Bind(
+                "Tolls", "Scaling", TollScaling.Flat,
+                new ConfigDescription(
+                    "Flat charges one toll per biome per crossing, whatever the size of the " +
+                    "haul. PerLoad charges one toll for every LoadSize units of that " +
+                    "biome's cargo, so moving a warehouse costs proportionally more and " +
+                    "boats stay worth using for bulk.",
+                    null, AdminOnly()));
 
             SpiritDialogue = cfg.Bind(
                 "Appearance", "SpiritDialogue", true,
@@ -82,6 +107,13 @@ namespace Tollbound.Config
                             "this biome's cargo toll-free.",
                             new AcceptableValueRange<int>(0, 100), AdminOnly())),
 
+                    LoadSize = cfg.Bind(section, "LoadSize", 30,
+                        new ConfigDescription(
+                            "Units of this biome's cargo covered by a single toll when " +
+                            "Scaling is PerLoad. Ignored under Flat. Defaults to one ore " +
+                            "stack, so a second stack costs a second toll.",
+                            new AcceptableValueRange<int>(1, 999), AdminOnly())),
+
                     LossRate = cfg.Bind(section, "LossRate", tier.DefaultLossRate,
                         new ConfigDescription(
                             $"Chance, rolled once per unit, that a piece of this biome's ore " +
@@ -100,6 +132,9 @@ namespace Tollbound.Config
 
         internal static float LossRate(BiomeTier tier) =>
             PerTier.TryGetValue(tier, out var e) ? e.LossRate.Value : 0f;
+
+        internal static int LoadSize(BiomeTier tier) =>
+            PerTier.TryGetValue(tier, out var e) ? e.LoadSize.Value : 30;
 
         private static ConfigurationManagerAttributes AdminOnly() =>
             new ConfigurationManagerAttributes { IsAdminOnly = true };

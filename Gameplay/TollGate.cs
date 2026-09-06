@@ -24,7 +24,16 @@ namespace Tollbound.Gameplay
     {
         internal BiomeTier Tier;
         internal string ItemPrefab;
+
+        /// <summary>The configured price of a single load.</summary>
+        internal int BaseAmount;
+
+        /// <summary>Loads being charged for. Always 1 under flat scaling.</summary>
+        internal int Loads = 1;
+
+        /// <summary>What the crossing actually costs: BaseAmount multiplied by Loads.</summary>
         internal int Amount;
+
         internal int Held;
 
         internal bool Affordable => Held >= Amount;
@@ -110,21 +119,14 @@ namespace Tollbound.Gameplay
 
             foreach (var tier in verdict.Manifest.TiersPresent)
             {
-                var amount = TollboundConfig.TollAmount(tier);
-                var itemPrefab = TollboundConfig.TollItem(tier);
-
-                if (amount <= 0 || string.IsNullOrEmpty(itemPrefab))
+                var toll = Price(tier, verdict.Manifest.UnitsOf(tier));
+                if (toll == null)
                 {
                     continue;
                 }
 
-                verdict.Tolls.Add(new TollDue
-                {
-                    Tier = tier,
-                    ItemPrefab = itemPrefab,
-                    Amount = amount,
-                    Held = Cargo.Count(inventory, itemPrefab),
-                });
+                toll.Held = Cargo.Count(inventory, toll.ItemPrefab);
+                verdict.Tolls.Add(toll);
             }
 
             // Every toll must be payable before any of it is spent, so a player is never
@@ -139,6 +141,44 @@ namespace Tollbound.Gameplay
 
             verdict.Allowed = true;
             return verdict;
+        }
+
+        /// <summary>
+        /// What one biome's spirit charges for carrying this much of its cargo. Null when
+        /// the biome is configured toll-free.
+        ///
+        /// Shared by the gate and the portal hover text so the quoted price and the charged
+        /// price cannot drift apart.
+        /// </summary>
+        internal static TollDue Price(BiomeTier tier, int unitsCarried)
+        {
+            var baseAmount = TollboundConfig.TollAmount(tier);
+            var itemPrefab = TollboundConfig.TollItem(tier);
+
+            if (baseAmount <= 0 || string.IsNullOrEmpty(itemPrefab))
+            {
+                return null;
+            }
+
+            var loads = 1;
+
+            if (TollboundConfig.Scaling.Value == TollScaling.PerLoad)
+            {
+                var loadSize = System.Math.Max(1, TollboundConfig.LoadSize(tier));
+
+                // Round up: a single unit over a stack is still a second load, which is
+                // what makes the rule legible as "a toll per stack".
+                loads = System.Math.Max(1, (unitsCarried + loadSize - 1) / loadSize);
+            }
+
+            return new TollDue
+            {
+                Tier = tier,
+                ItemPrefab = itemPrefab,
+                BaseAmount = baseAmount,
+                Loads = loads,
+                Amount = baseAmount * loads,
+            };
         }
 
         /// <summary>
