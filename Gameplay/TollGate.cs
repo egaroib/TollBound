@@ -83,7 +83,7 @@ namespace Tollbound.Gameplay
             var verdict = new Verdict
             {
                 Ceiling = ceiling,
-                Manifest = Manifest.Build(player == null ? null : player.GetInventory()),
+                Manifest = Manifest.Build(player),
             };
 
             if (verdict.Manifest.IsEmpty)
@@ -115,8 +115,6 @@ namespace Tollbound.Gameplay
                 return verdict;
             }
 
-            var inventory = player.GetInventory();
-
             foreach (var tier in verdict.Manifest.TiersPresent)
             {
                 var toll = Price(tier, verdict.Manifest.UnitsOf(tier));
@@ -125,7 +123,7 @@ namespace Tollbound.Gameplay
                     continue;
                 }
 
-                toll.Held = Cargo.Count(inventory, toll.ItemPrefab);
+                toll.Held = Cargo.Count(player, toll.ItemPrefab);
                 verdict.Tolls.Add(toll);
             }
 
@@ -187,11 +185,9 @@ namespace Tollbound.Gameplay
         /// </summary>
         internal static List<Loss> Apply(Player player, Verdict verdict)
         {
-            var inventory = player.GetInventory();
-
             foreach (var toll in verdict.Tolls)
             {
-                Cargo.Remove(inventory, toll.ItemPrefab, toll.Amount);
+                Cargo.Remove(player, toll.ItemPrefab, toll.Amount);
             }
 
             var losses = new List<Loss>();
@@ -216,7 +212,7 @@ namespace Tollbound.Gameplay
                     continue;
                 }
 
-                var actually = Cargo.Remove(inventory, lot.Prefab, lost);
+                var actually = Cargo.Remove(player, lot.Prefab, lost);
                 if (actually > 0)
                 {
                     losses.Add(new Loss { Tier = lot.Tier, Prefab = lot.Prefab, Count = actually });

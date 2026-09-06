@@ -14,6 +14,12 @@ namespace Tollbound
 {
     [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid)]
+    // Soft, so Tollbound runs with or without them, but loads after them when present.
+    // The bridge itself binds by reflection; these only fix load order.
+    [BepInDependency(Gameplay.Backpacks.BackpackBridge.AdventureBackpacksGuid,
+        BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(Gameplay.Backpacks.BackpackBridge.BlaxxunBackpacksGuid,
+        BepInDependency.DependencyFlags.SoftDependency)]
     // EveryoneMustHaveMod: clients without this mod are refused, instead of silently
     // desyncing. Drop to NotEnforced only for purely local, presentation-only mods.
     // See references/multiplayer.md.
@@ -59,6 +65,7 @@ namespace Tollbound
         {
             Model.CargoRegistry.Build();
             TollboundConfig.ResolveTollItems();
+            Gameplay.Backpacks.BackpackBridge.Bind();
 
             if (TollboundConfig.WriteItemReport.Value)
             {

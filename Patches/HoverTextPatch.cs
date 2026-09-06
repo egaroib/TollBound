@@ -94,7 +94,7 @@ namespace Tollbound.Patches
                 return null;
             }
 
-            var manifest = Manifest.Build(player.GetInventory());
+            var manifest = Manifest.Cached(player);
             if (manifest.IsEmpty)
             {
                 return null;
@@ -120,7 +120,7 @@ namespace Tollbound.Patches
 
             var parts = new List<string>();
 
-            var toll = TollSummary(manifest, player.GetInventory());
+            var toll = TollSummary(manifest, player);
             if (toll != null)
             {
                 parts.Add(toll);
@@ -135,7 +135,7 @@ namespace Tollbound.Patches
             return parts.Count == 0 ? null : string.Join("  ", parts.ToArray());
         }
 
-        private static string TollSummary(Manifest manifest, Inventory inventory)
+        private static string TollSummary(Manifest manifest, Player player)
         {
             var owed = new List<string>();
             var short_ = false;
@@ -150,7 +150,7 @@ namespace Tollbound.Patches
                     continue;
                 }
 
-                if (Cargo.Count(inventory, toll.ItemPrefab) < toll.Amount)
+                if (Cargo.Count(player, toll.ItemPrefab) < toll.Amount)
                 {
                     short_ = true;
                 }

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Tollbound.Gameplay.Backpacks;
 using Tollbound.Model;
+using UnityEngine;
 
 namespace Tollbound.Gameplay
 {
@@ -46,9 +48,31 @@ namespace Tollbound.Gameplay
         /// <summary>Total units of one biome's cargo, which is what a toll is priced against.</summary>
         internal int UnitsOf(BiomeTier tier) => Of(tier).Sum(l => l.Count);
 
-        internal static Manifest Build(Inventory inventory)
+        /// <summary>Cached for the readers that run every frame. See Cached.</summary>
+        private static Manifest _cached;
+        private static float _cachedAt = float.NegativeInfinity;
+
+        /// <summary>
+        /// A manifest good enough for display. Scanning is cheap for the player's own
+        /// inventory but not for a backpack mod that can only be queried one item name at a
+        /// time, and the hover text asks every frame. The gate always builds fresh.
+        /// </summary>
+        internal static Manifest Cached(Player player)
+        {
+            if (_cached != null && Time.time - _cachedAt < 0.25f)
+            {
+                return _cached;
+            }
+
+            _cached = Build(player);
+            _cachedAt = Time.time;
+            return _cached;
+        }
+
+        internal static Manifest Build(Player player)
         {
             var manifest = new Manifest();
+            var inventory = player == null ? null : player.GetInventory();
             if (inventory == null)
             {
                 return manifest;
@@ -91,31 +115,87 @@ namespace Tollbound.Gameplay
                 lot.Count += item.m_stack;
             }
 
+            // Ore in a pack is ore. Without this the whole ruleset is bypassed by moving
+            // items one slot to the left.
+            BackpackBridge.CollectCargo(player, (prefab, count) => Record(manifest, byPrefab, prefab, count));
+
             return manifest;
+        }
+
+        /// <summary>Folds one stack of cargo into the manifest, wherever it was found.</summary>
+        private static void Record(
+            Manifest manifest, Dictionary<string, CargoLot> byPrefab, string prefab, int count)
+        {
+            if (count <= 0)
+            {
+                return;
+            }
+
+            var tier = CargoRegistry.TierOfItem(prefab);
+            if (tier == BiomeTier.None)
+            {
+                if (!manifest.Unrecognized.Contains(prefab) && IsRestrictedByGame(prefab))
+                {
+                    manifest.Unrecognized.Add(prefab);
+                }
+
+                return;
+            }
+
+            if (!byPrefab.TryGetValue(prefab, out var lot))
+            {
+                lot = new CargoLot
+                {
+                    Prefab = prefab,
+                    Tier = tier,
+                    Destructible = CargoRegistry.CanBeLost(prefab),
+                };
+                byPrefab[prefab] = lot;
+                manifest.Lots.Add(lot);
+            }
+
+            lot.Count += count;
+        }
+
+        private static bool IsRestrictedByGame(string prefab)
+        {
+            if (ObjectDB.instance == null
+                || !ObjectDB.instance.TryGetItemPrefab(prefab, out var go)
+                || go == null)
+            {
+                return false;
+            }
+
+            var drop = go.GetComponent<ItemDrop>();
+            return drop?.m_itemData?.m_shared != null && !drop.m_itemData.m_shared.m_teleportable;
         }
     }
 
     /// <summary>Counting and removing by prefab name, which vanilla's Inventory does not offer.</summary>
     internal static class Cargo
     {
-        internal static int Count(Inventory inventory, string prefabName)
+        internal static int Count(Player player, string prefabName)
         {
+            var inventory = player == null ? null : player.GetInventory();
             if (inventory == null || prefabName == null)
             {
                 return 0;
             }
 
-            return inventory.GetAllItems()
+            var carried = inventory.GetAllItems()
                 .Where(i => PortalIdentity.PrefabNameOf(i) == prefabName)
                 .Sum(i => i.m_stack);
+
+            return carried + BackpackBridge.Count(player, prefabName);
         }
 
         /// <summary>
         /// Removes up to <paramref name="amount"/> units and returns how many were actually
         /// taken. Iterates a copy because RemoveItem mutates the inventory's own list.
         /// </summary>
-        internal static int Remove(Inventory inventory, string prefabName, int amount)
+        internal static int Remove(Player player, string prefabName, int amount)
         {
+            var inventory = player == null ? null : player.GetInventory();
             if (inventory == null || prefabName == null || amount <= 0)
             {
                 return 0;
@@ -138,6 +218,14 @@ namespace Tollbound.Gameplay
                 var take = System.Math.Min(item.m_stack, amount - taken);
                 inventory.RemoveItem(item, take);
                 taken += take;
+            }
+
+            // Hands first, then packs. A player holding entrails should spend those before
+            // the mod goes rummaging, and losses must be able to reach a pack or stashing
+            // ore in one would make it immune.
+            if (taken < amount)
+            {
+                taken += BackpackBridge.Remove(player, prefabName, amount - taken);
             }
 
             return taken;

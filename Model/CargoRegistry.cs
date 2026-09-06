@@ -19,6 +19,12 @@ namespace Tollbound.Model
 
         internal static bool IsBuilt { get; private set; }
 
+        /// <summary>
+        /// Every restricted prefab, for backpack mods that can only be asked about items by
+        /// name rather than enumerated.
+        /// </summary>
+        internal static IEnumerable<string> AllCargo => TierOf.Keys;
+
         internal static void Build()
         {
             TierOf.Clear();
