@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.1
+- Loss rates raised after play testing: 8 / 11 / 14 / 17 / 22 percent, up from
+  5 / 7 / 9 / 11 / 15. A sixty-unit haul now loses about five ore in the Black Forest
+  rather than three, and about thirteen flametal in the Ashlands rather than nine, so
+  killing a biome's boss is worth doing rather than merely nice. Existing configs keep
+  their own values; edit LossRate per tier to adopt the new ones.
+
 ## 0.7.0
 - Each portal now renders its own build-menu icon in its biome colour, so the six are
   tellable apart without hovering. The icon colour is baked into the sprite rather than

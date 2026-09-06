@@ -30,12 +30,12 @@ is refused at the version handshake rather than allowed in to desync quietly.
 
 | Portal | Cargo it adds | Toll per trip | Loss while the boss lives |
 |---|---|---|---|
-| Black Forest | Copper, tin, bronze, ores and scrap | 5 × Greydwarf eye | 5% |
-| Swamp | Iron, iron ore, scrap iron | 6 × Entrails | 7% |
-| Mountain | Silver, silver ore, dragon eggs | 4 × Freeze gland | 9% |
-| Plains | Black metal, black metal scrap | 5 × Needle | 11% |
+| Black Forest | Copper, tin, bronze, ores and scrap | 5 × Greydwarf eye | 8% |
+| Swamp | Iron, iron ore, scrap iron | 6 × Entrails | 11% |
+| Mountain | Silver, silver ore, dragon eggs | 4 × Freeze gland | 14% |
+| Plains | Black metal, black metal scrap | 5 × Needle | 17% |
 | Mistlands | Dvergr extractors, Hildir's chests | 4 × Bilebag | — |
-| Ashlands | Flametal, cogwheels, springs, iron pits | 5 × Charred bone | 15% |
+| Ashlands | Flametal, cogwheels, springs, iron pits | 5 × Charred bone | 22% |
 
 Tolls stack across every biome represented in your pack, not just the portal's own tier.
 Losses are rolled once per unit, so a large haul loses roughly the listed share.
