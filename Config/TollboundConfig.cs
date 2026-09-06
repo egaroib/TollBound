@@ -46,6 +46,12 @@ namespace Tollbound.Config
         private static readonly Dictionary<BiomeTier, TierEntries> PerTier =
             new Dictionary<BiomeTier, TierEntries>();
 
+        /// <summary>
+        /// Toll item per tier after checking it actually exists. See ResolveTollItems.
+        /// </summary>
+        private static readonly Dictionary<BiomeTier, string> ResolvedTollItem =
+            new Dictionary<BiomeTier, string>();
+
         internal static void Bind(ConfigFile cfg)
         {
             VerboseLogging = cfg.Bind(
@@ -125,7 +131,60 @@ namespace Tollbound.Config
         }
 
         internal static string TollItem(BiomeTier tier) =>
-            PerTier.TryGetValue(tier, out var e) ? e.TollItem.Value : null;
+            ResolvedTollItem.TryGetValue(tier, out var resolved)
+                ? resolved
+                : PerTier.TryGetValue(tier, out var e) ? e.TollItem.Value : null;
+
+        /// <summary>
+        /// Checks every configured toll item against the item database once the game has
+        /// loaded, and falls back to the shipped default for any that does not exist.
+        ///
+        /// A typo here is otherwise unrecoverable in play: the count of a nonexistent item
+        /// is always zero, so the toll can never be paid and that biome's cargo simply
+        /// stops crossing, with nothing on screen to explain why. That is a server admin's
+        /// mistake rather than an exploit, so it recovers loudly rather than failing shut.
+        /// </summary>
+        internal static void ResolveTollItems()
+        {
+            ResolvedTollItem.Clear();
+
+            foreach (var tier in Tiers.All)
+            {
+                if (!PerTier.TryGetValue(tier.Tier, out var entries))
+                {
+                    continue;
+                }
+
+                var configured = entries.TollItem.Value;
+
+                if (Exists(configured))
+                {
+                    ResolvedTollItem[tier.Tier] = configured;
+                    continue;
+                }
+
+                if (Exists(tier.DefaultTollItem))
+                {
+                    ResolvedTollItem[tier.Tier] = tier.DefaultTollItem;
+                    TollboundPlugin.LogError(
+                        $"Tier - {tier.Tier}: TollItem '{configured}' is not an item in this " +
+                        $"install. Falling back to '{tier.DefaultTollItem}'. Fix the config, " +
+                        "or that biome's toll will not be what you intended.");
+                    continue;
+                }
+
+                ResolvedTollItem[tier.Tier] = null;
+                TollboundPlugin.LogError(
+                    $"Tier - {tier.Tier}: neither TollItem '{configured}' nor the default " +
+                    $"'{tier.DefaultTollItem}' exists. This biome is now toll-free.");
+            }
+        }
+
+        private static bool Exists(string prefabName) =>
+            !string.IsNullOrEmpty(prefabName)
+            && ObjectDB.instance != null
+            && ObjectDB.instance.TryGetItemPrefab(prefabName, out var go)
+            && go != null;
 
         internal static int TollAmount(BiomeTier tier) =>
             PerTier.TryGetValue(tier, out var e) ? e.TollAmount.Value : 0;

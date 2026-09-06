@@ -61,6 +61,7 @@ namespace Tollbound.Content
             }
 
             Tint(prefab, tier);
+            ApplyIcon(prefab, tier);
 
             var config = new PieceConfig
             {
@@ -114,7 +115,91 @@ namespace Tollbound.Content
             teleport.m_colorUnconnected = Scale(tier.Hue, TollboundConfig.IdleGlowIntensity.Value);
             teleport.m_colorTargetfound = Scale(tier.Hue, TollboundConfig.ConnectedGlowIntensity.Value);
 
+            TintModel(teleport, tier);
             TintSwirl(teleport, tier);
+        }
+
+        /// <summary>
+        /// Tints the frame's own material.
+        ///
+        /// TeleportWorld writes the emission colour every frame in Update, so this is not
+        /// needed for the live portal — but a rendered icon captures the prefab as it sits,
+        /// before any Update has run, and would otherwise come out vanilla yellow.
+        ///
+        /// Touching .material instantiates a copy owned by this renderer, so the vanilla
+        /// portal's shared material is not affected.
+        /// </summary>
+        private static void TintModel(TeleportWorld teleport, TierInfo tier)
+        {
+            if (teleport.m_model == null)
+            {
+                return;
+            }
+
+            var material = teleport.m_model.material;
+            if (material == null)
+            {
+                return;
+            }
+
+            material.EnableKeyword("_EMISSION");
+            material.SetColor("_EmissionColor",
+                Scale(tier.Hue, TollboundConfig.ConnectedGlowIntensity.Value));
+        }
+
+        /// <summary>
+        /// Renders the tinted prefab into its own build-menu icon.
+        ///
+        /// Six portals cloned from one prefab share one icon, so the hammer menu shows six
+        /// identical entries. Tinting the icon's colour in the UI is not an option: vanilla
+        /// writes m_icon.color itself to signal whether a piece is affordable, and
+        /// overwriting that would cost the player a more useful cue than it bought them.
+        /// Baking the colour into the sprite leaves that mechanism alone.
+        /// </summary>
+        private static void ApplyIcon(GameObject prefab, TierInfo tier)
+        {
+            var piece = prefab.GetComponent<Piece>();
+            if (piece == null)
+            {
+                return;
+            }
+
+            // A dedicated server has no graphics device; Render returns a blank sprite
+            // there, and nothing would ever draw it anyway.
+            if (GUIManager.IsHeadless())
+            {
+                return;
+            }
+
+            try
+            {
+                var sprite = RenderManager.Instance.Render(new RenderManager.RenderRequest(prefab)
+                {
+                    Rotation = RenderManager.IsometricRotation,
+                    UseCache = true,
+                    TargetPlugin = TollboundPlugin.Instance.Info.Metadata,
+
+                    // The portal's own particle effects would otherwise fill the frame.
+                    ParticleSimulationTime = -1f,
+                });
+
+                if (sprite != null)
+                {
+                    piece.m_icon = sprite;
+                    TollboundPlugin.LogVerbose($"{tier.PortalPrefab}: rendered its own icon.");
+                }
+                else
+                {
+                    TollboundPlugin.LogWarning(
+                        $"{tier.PortalPrefab}: icon render returned nothing, keeping the " +
+                        "vanilla portal icon.");
+                }
+            }
+            catch (System.Exception e)
+            {
+                // An icon is cosmetic. Never let it stop the piece registering.
+                TollboundPlugin.LogWarning($"{tier.PortalPrefab}: icon render failed ({e.Message}).");
+            }
         }
 
         /// <summary>

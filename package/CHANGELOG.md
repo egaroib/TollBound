@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0
+- Each portal now renders its own build-menu icon in its biome colour, so the six are
+  tellable apart without hovering. The icon colour is baked into the sprite rather than
+  applied in the UI, leaving vanilla's affordable/unaffordable icon tinting intact.
+- Configured toll items are checked against the item database on load. A name that does
+  not exist falls back to the shipped default with a loud error, instead of silently
+  making that biome's cargo impossible to move.
+- Portal hover text now shows the expected loss alongside the rate, not just the
+  percentage — the number actually worth deciding on.
+
 ## 0.6.0
 - New Tolls/Scaling setting. Flat (default) keeps one toll per biome per crossing whatever
   the haul. PerLoad charges one toll for every LoadSize units of that biome's cargo, so

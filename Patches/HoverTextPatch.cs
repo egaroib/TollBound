@@ -191,7 +191,12 @@ namespace Tollbound.Patches
                     continue;
                 }
 
-                atRisk.Add($"{units} at {rate * 100f:0.#}% to {SpiritOf(tier)}");
+                // The expected loss, not just the rate: a percentage alone does not tell
+                // you whether to risk the trip, and it is the number worth tuning against.
+                var expected = units * rate;
+                var likely = expected < 0.5f ? "under 1" : $"~{UnityEngine.Mathf.RoundToInt(expected)}";
+
+                atRisk.Add($"{units} at {rate * 100f:0.#}% to {SpiritOf(tier)} ({likely})");
             }
 
             return atRisk.Count == 0
