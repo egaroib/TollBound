@@ -49,6 +49,11 @@ namespace Tollbound.Diagnostics
                 "CopperOre", "TinOre", "Tin", "Bronze", "IronOre", "IronScrap",
                 "SilverOre", "BlackMetalScrap", "FlametalOre", "FlametalOreNew",
             }),
+            new KeyValuePair<string, string[]>("Recipe candidates for the tweak pass", new[]
+            {
+                "BlackCore", "MoltenCore", "Wisp", "Sap", "Softtissue", "Carapace",
+                "Thunderstone", "Crystal", "JuteRed", "AskHide", "ProustitePowder",
+            }),
             new KeyValuePair<string, string[]>("Named in design, existence unconfirmed", new[]
             {
                 "BronzeScrap", "CopperScrap", "DragonEgg", "MechanicalSpring",

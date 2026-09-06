@@ -132,7 +132,7 @@ namespace Tollbound.Model
                 DefaultLossRate = 0.07f,
                 CraftingStation = Jotunn.Configs.CraftingStations.Workbench,
                 // ElderBark, not AncientBark: the display name and the prefab name differ.
-                Recipe = new[] { new Ingredient("FineWood", 20), new Ingredient("ElderBark", 10), new Ingredient("SurtlingCore", 2), new Ingredient("Iron", 5) },
+                Recipe = new[] { new Ingredient("FineWood", 20), new Ingredient("ElderBark", 10), new Ingredient("SurtlingCore", 3), new Ingredient("Iron", 5) },
                 Cargo = new[] { "IronOre", "IronScrap", "Iron" },
                 LossEligible = new[] { "IronOre", "IronScrap", "Iron" },
             },
@@ -150,8 +150,8 @@ namespace Tollbound.Model
                 DefaultTollItem = "FreezeGland",
                 DefaultTollAmount = 4,
                 DefaultLossRate = 0.09f,
-                CraftingStation = Jotunn.Configs.CraftingStations.Forge,
-                Recipe = new[] { new Ingredient("FineWood", 20), new Ingredient("Obsidian", 10), new Ingredient("SurtlingCore", 2), new Ingredient("Silver", 5) },
+                CraftingStation = Jotunn.Configs.CraftingStations.Workbench,
+                Recipe = new[] { new Ingredient("FineWood", 20), new Ingredient("Obsidian", 10), new Ingredient("SurtlingCore", 4), new Ingredient("Silver", 5) },
                 Cargo = new[] { "SilverOre", "Silver", "DragonEgg" },
                 // DragonEgg is protected: gated by tier, never destroyed.
                 LossEligible = new[] { "SilverOre", "Silver" },
@@ -171,7 +171,7 @@ namespace Tollbound.Model
                 DefaultTollAmount = 5,
                 DefaultLossRate = 0.11f,
                 CraftingStation = Jotunn.Configs.CraftingStations.Forge,
-                Recipe = new[] { new Ingredient("FineWood", 20), new Ingredient("Needle", 10), new Ingredient("SurtlingCore", 2), new Ingredient("BlackMetal", 5) },
+                Recipe = new[] { new Ingredient("FineWood", 20), new Ingredient("Needle", 10), new Ingredient("SurtlingCore", 6), new Ingredient("BlackMetal", 5) },
                 Cargo = new[] { "BlackMetalScrap", "BlackMetal" },
                 LossEligible = new[] { "BlackMetalScrap", "BlackMetal" },
             },
@@ -191,8 +191,8 @@ namespace Tollbound.Model
                 // Nothing this rung admits is loss-eligible, so the rate never fires.
                 // Kept configurable in case a future item is added to the tier.
                 DefaultLossRate = 0f,
-                CraftingStation = Jotunn.Configs.CraftingStations.ArtisanTable,
-                Recipe = new[] { new Ingredient("YggdrasilWood", 20), new Ingredient("BlackMarble", 10), new Ingredient("SurtlingCore", 4), new Ingredient("Eitr", 2) },
+                CraftingStation = Jotunn.Configs.CraftingStations.Forge,
+                Recipe = new[] { new Ingredient("YggdrasilWood", 20), new Ingredient("BlackMarble", 10), new Ingredient("SurtlingCore", 8), new Ingredient("Eitr", 2) },
                 Cargo = new[] { "DvergrNeedle", "chest_hildir1", "chest_hildir2", "chest_hildir3" },
                 LossEligible = new string[0],
             },
@@ -210,10 +210,10 @@ namespace Tollbound.Model
                 DefaultTollItem = "CharredBone",
                 DefaultTollAmount = 5,
                 DefaultLossRate = 0.15f,
-                CraftingStation = Jotunn.Configs.CraftingStations.BlackForge,
+                CraftingStation = Jotunn.Configs.CraftingStations.Forge,
                 // FlametalNew is the current Ashlands metal; bare "Flametal" is the
                 // legacy pre-Ashlands item, display name "Ancient Metal".
-                Recipe = new[] { new Ingredient("Blackwood", 20), new Ingredient("Grausten", 10), new Ingredient("SurtlingCore", 4), new Ingredient("FlametalNew", 5) },
+                Recipe = new[] { new Ingredient("Blackwood", 20), new Ingredient("Grausten", 10), new Ingredient("SurtlingCore", 10), new Ingredient("FlametalNew", 5) },
                 Cargo = new[]
                 {
                     "FlametalOre", "FlametalOreNew", "Flametal", "FlametalNew",

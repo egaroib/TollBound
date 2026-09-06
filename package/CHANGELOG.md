@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.1
+- Surtling cores now scale across the ladder: 2, 3, 4, 6, 8, 10. They are already vanilla's
+  portal ingredient, so a bigger portal wanting more core reads better than swapping in a
+  different core at the top.
+- Stations simplified to Workbench for the first three rungs and Forge for the last three.
+  The Artisan table and Black forge read oddly in sequence for what is the same structure
+  six times, and a Workbench is far easier to plant in the field than a Forge.
+- Item report gained a candidate group for late-game recipe materials.
+
 ## 0.5.0
 - The spirits speak. A crossing that is refused or paid for now draws a centre-screen line
   composed from two pools: an atmospheric opener and a demand, each a complete sentence, so
