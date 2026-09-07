@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Tollbound</AssemblyName>
     <RootNamespace>Tollbound</RootNamespace>
-    <Version>0.10.1</Version>
+    <Version>0.10.2</Version>
     <Description>A Valheim mod.</Description>
     <Authors>RAGEmedia</Authors>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

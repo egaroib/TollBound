@@ -30,7 +30,7 @@ namespace Tollbound
     {
         public const string PluginGuid = "com.ragemedia.tollbound";
         public const string PluginName = "Tollbound";
-        public const string PluginVersion = "0.10.1";
+        public const string PluginVersion = "0.10.2";
 
         internal static TollboundPlugin Instance;
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.2
+- Documentation only. The README now carries screenshots: the six portals side by
+  side, a paid crossing, the hover text and a refused one. No gameplay change —
+  this release exists so the Thunderstore page picks the images up.
+
 ## 0.10.1
 - Fix a backpack holding restricted cargo being refused outright. Backpack mods mark the
   pack itself non-teleportable while it holds ore, and Tollbound was reading that as one

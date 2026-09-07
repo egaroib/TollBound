@@ -1,6 +1,6 @@
 {
   "name": "Tollbound",
-  "version_number": "0.10.1",
+  "version_number": "0.10.2",
   "website_url": "https://github.com/egaroib/TollBound",
   "description": "Portals you earn one biome at a time. Cargo decides the toll, boss kills decide what survives the trip.",
   "dependencies": [
