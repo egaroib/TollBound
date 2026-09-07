@@ -11,6 +11,10 @@ pieces, each built from its own biome's materials, each carrying a little more t
 everything, so earning it in the base game is still the graduation. Tollbound's whole ladder
 sits before it.
 
+![Six Tollbound portals in a row, each glowing in its own biome's colour](https://raw.githubusercontent.com/egaroib/TollBound/main/img/tollbound_portals.jpg)
+
+*The whole ladder, built out — Black Forest to Ashlands, left to right.*
+
 ## How it works
 
 **Each portal is a licence with a ceiling.** A Swamp portal carries Swamp-tier cargo and
@@ -66,15 +70,16 @@ home the hard way. From the second run onward the biome is open.
 Each portal glows in its biome's colour and carries its own icon in the build menu, so six
 of them in one base are still tellable apart.
 
+![A Tollbound portal firing as a player carrying a backpack steps through](https://raw.githubusercontent.com/egaroib/TollBound/main/img/tollbound_vfx.jpg)
+
+*A paid crossing. Cargo in a backpack is weighed like anything else.*
+
 ## Knowing where you stand
 
 Look at a portal and it tells you what this particular crossing will carry, what the toll
 comes to, and what a living boss is putting at risk:
 
-```
-Swamp to Black Forest. Carries Black Forest cargo and below.
-Toll: Greydwarf Eye x5   At risk: 42 at 8% to the Elder (~3)
-```
+![Portal hover text reading: Mountain to Plains. Carries Mountain cargo and below. Toll: Greydwarf Eye x5. At risk: 22 at 8% to the Elder](https://raw.githubusercontent.com/egaroib/TollBound/main/img/tollbound_hover.jpg)
 
 The no-teleport slash in your inventory tells the truth too. Stand at a Swamp portal and it
 clears from your iron while staying on your flametal.
@@ -87,6 +92,10 @@ changes tone once you have killed it.
 > The bog exhales. Nothing leaves the marsh unweighed.
 
 > The mud parts where you walk. The mire outlived him. So did the toll.
+
+![A refused crossing: the Elder demands Greydwarf Eye x5, and a spirit line reads "Something old shifts beneath the moss. Nothing leaves these woods unweighed."](https://raw.githubusercontent.com/egaroib/TollBound/main/img/tollbound_message.jpg)
+
+*A refusal: the itemised ledger top-left, the spirit's line centre-screen. Nothing is spent.*
 
 Lines live in `BepInEx/config/Tollbound/voice.txt` and can be edited or added to without
 reinstalling. The file is never rewritten, so your edits survive updates; sections added by

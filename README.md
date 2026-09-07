@@ -11,6 +11,10 @@ Wood and stone portals behave exactly as vanilla. `portal_stone` already carries
 so earning it in the base game stays the natural graduation; Tollbound's whole ladder sits
 before it and never patches it.
 
+![Six Tollbound portals in a row, each glowing in its own biome's colour](img/tollbound_portals.jpg)
+
+*The whole ladder, built out — Black Forest to Ashlands, left to right.*
+
 ## The rules
 
 **Each portal is a licence with a ceiling.** A Swamp portal carries Swamp-tier cargo and
@@ -31,6 +35,10 @@ extractors, cogwheels and Hildir's chests never are.
 
 Evaluation is all-or-nothing up front: nothing is consumed unless every check passes, so a
 refused crossing costs the player nothing.
+
+![A Tollbound portal firing as a player carrying a backpack steps through](img/tollbound_vfx.jpg)
+
+*A paid crossing. Cargo in a backpack is weighed like anything else.*
 
 ## The ladder
 
@@ -55,6 +63,15 @@ its own tier's metal, so the first haul out of any biome is necessarily a boat t
   all-or-nothing flag.
 - Per-biome spirit dialogue, composed from an editable text file.
 - Backpack and map-portal mod support.
+
+![Portal hover text reading: Mountain to Plains. Carries Mountain cargo and below. Toll: Greydwarf Eye x5. At risk: 22 at 8% to the Elder](img/tollbound_hover.jpg)
+
+*Hover text resolves the pairing, prices the toll and names what a living boss is putting at
+risk — before you step through.*
+
+![A refused crossing: the Elder demands Greydwarf Eye x5, and a spirit line reads "Something old shifts beneath the moss. Nothing leaves these woods unweighed."](img/tollbound_message.jpg)
+
+*A refusal: the itemised ledger top-left, the spirit's line centre-screen.*
 
 ## Compatibility
 
