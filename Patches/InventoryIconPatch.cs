@@ -70,7 +70,7 @@ namespace Tollbound.Patches
         /// Mirrors UpdateGui's own item-to-slot lookup. Guarded because a grid mid-resize
         /// can briefly hold fewer elements than the inventory has slots.
         /// </summary>
-        private static InventoryGrid.Element ElementFor(
+        private static InventoryElement ElementFor(
             InventoryGrid grid, ItemDrop.ItemData item, int width)
         {
             var index = item.m_gridPos.y * width + item.m_gridPos.x;

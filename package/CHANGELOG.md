@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.0.1
+- Fixed one walk through a portal charging the toll several times over
+- Fixed the spirit repeating its line a dozen times for a single crossing
+- Fixed cargo being destroyed by repeated loss rolls during one crossing
+- Fixed a toll being taken for a crossing the game then refused
+- Changed the Jotunn dependency to 2.30.1
+
+## 1.0.0
+- Valheim 1.0 support. The game's 1.0 update moved several of the methods Tollbound
+  patches, and the previous build would have loaded and then silently done nothing at a
+  biome portal. Rebuilt against 1.0.7 (Unity 6). This release does not run on 0.221.x.
+- Refuse cargo the game now marks as permanently unteleportable. 1.0 added a second,
+  harder restriction than the old teleportable flag: an item carrying it is refused even
+  by a portal that allows all items and even under the TeleportAll world key. Tollbound
+  owns the crossing at a biome portal rather than deferring to the game, so without this
+  such an item would have ridden through free while every vanilla portal refused it.
+  It is now treated as unpriceable cargo and the crossing fails closed, which is the same
+  answer Tollbound already gave to any restricted item it has no tier for.
+- Dependencies updated to BepInExPack 5.4.2350 and Jotunn 2.30.0.
+- The minor version is part of the network compatibility check, so 0.10.x clients cannot
+  join a 1.0.0 server or the reverse. Everyone updates together.
+
 ## 0.10.2
 - Documentation only. The README now carries screenshots: the six portals side by
   side, a paid crossing, the hover text and a refused one. No gameplay change —

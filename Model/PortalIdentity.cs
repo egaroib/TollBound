@@ -62,16 +62,22 @@ namespace Tollbound.Model
             ZDO closest = null;
             var closestSq = maxDistanceSq;
 
-            foreach (var portal in ZDOMan.instance.GetPortals())
+            // 1.0 buckets the portal ZDOs by sector rather than holding one flat list.
+            // Scanning every bucket keeps the old behaviour: a portal a step across a
+            // sector boundary is still the nearest one, and the total count is small.
+            foreach (var sector in ZDOMan.instance.GetPortals())
             {
-                var distanceSq = (portal.GetPosition() - position).sqrMagnitude;
-                if (distanceSq >= closestSq)
+                foreach (var portal in sector.Value)
                 {
-                    continue;
-                }
+                    var distanceSq = (portal.GetPosition() - position).sqrMagnitude;
+                    if (distanceSq >= closestSq)
+                    {
+                        continue;
+                    }
 
-                closest = portal;
-                closestSq = distanceSq;
+                    closest = portal;
+                    closestSq = distanceSq;
+                }
             }
 
             if (closest == null)

@@ -3,6 +3,7 @@ using System.Linq;
 using Tollbound.Config;
 using Tollbound.Gameplay;
 using Tollbound.Model;
+using UnityEngine;
 
 namespace Tollbound.Messages
 {
@@ -22,8 +23,24 @@ namespace Tollbound.Messages
     /// </summary>
     internal static class Voice
     {
+        /// <summary>
+        /// How long the same refusal stays the same refusal. One walk into a portal fires
+        /// TeleportWorld.Teleport dozens of times, and a spirit that says the same thing
+        /// forty times over is a bug rather than a character. Comfortably longer than the
+        /// burst, comfortably shorter than the time it takes to go and fetch the toll.
+        /// </summary>
+        private const float RepeatWindow = 5f;
+
+        private static string _lastRefusal;
+        private static float _lastRefusalAt = float.NegativeInfinity;
+
         internal static void Refused(Player player, Verdict verdict)
         {
+            if (Repeated(verdict))
+            {
+                return;
+            }
+
             switch (verdict.Refusal)
             {
                 case Refusal.AboveCeiling:
@@ -49,6 +66,30 @@ namespace Tollbound.Messages
                         "It cannot cross.");
                     break;
             }
+        }
+
+        /// <summary>
+        /// Whether this is the refusal already showing on screen. Keyed on what the player
+        /// would read, so a refusal that changed — a different item, a different price —
+        /// always speaks, and only word-for-word repetition is swallowed.
+        /// </summary>
+        private static bool Repeated(Verdict verdict)
+        {
+            var key = $"{verdict.Refusal}|{verdict.Ceiling}|{verdict.OffendingItem}|" +
+                      $"{verdict.UnrecognizedItem}|{verdict.Unaffordable?.ItemPrefab}|" +
+                      $"{verdict.Unaffordable?.Amount}|{verdict.Unaffordable?.Held}";
+
+            if (key == _lastRefusal && Time.time - _lastRefusalAt < RepeatWindow)
+            {
+                return true;
+            }
+
+            // Anchored to what was last said, not to what was last attempted, so walking
+            // back in a while later is answered rather than met with silence.
+            _lastRefusal = key;
+            _lastRefusalAt = Time.time;
+
+            return false;
         }
 
         internal static void Crossed(Player player, Verdict verdict, List<Loss> losses)

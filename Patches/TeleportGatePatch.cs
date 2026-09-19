@@ -29,6 +29,16 @@ namespace Tollbound.Patches
                 return true;
             }
 
+            // One walk into a portal is not one call. TeleportWorldTrigger.OnTriggerEnter
+            // fires dozens of times over the two seconds a crossing takes, and vanilla
+            // survives that only because a repeat call says nothing and TeleportTo ignores
+            // it. Tollbound cannot: every repeat would speak a fresh line and take a fresh
+            // toll. A crossing already in flight is the same crossing.
+            if (player.IsTeleporting())
+            {
+                return false;
+            }
+
             if (!__instance.TargetFound())
             {
                 return false;
@@ -61,7 +71,14 @@ namespace Tollbound.Patches
                 return false;
             }
 
-            // Nothing is spent until every check has passed.
+            // Nothing is spent until the player is genuinely on their way. Vanilla
+            // refuses a crossing within two seconds of the last arrival, and a toll taken
+            // for a crossing that then does not happen would be taken for nothing.
+            if (!Cross(__instance, player))
+            {
+                return false;
+            }
+
             var losses = TollGate.Apply(player, verdict);
             Voice.Crossed(player, verdict, losses);
 
@@ -69,12 +86,14 @@ namespace Tollbound.Patches
                 $"Allowed a {near} -> {far} crossing (ceiling {verdict.Ceiling}), " +
                 $"{verdict.Tolls.Count} toll(s), {losses.Count} loss group(s).");
 
-            Cross(__instance, player);
             return false;
         }
 
-        /// <summary>Mirrors the movement half of TeleportWorld.Teleport.</summary>
-        private static void Cross(TeleportWorld portal, Player player)
+        /// <summary>
+        /// Mirrors the movement half of TeleportWorld.Teleport. Reports whether the player
+        /// actually left, which is what the tolls hang off.
+        /// </summary>
+        private static bool Cross(TeleportWorld portal, Player player)
         {
             var connection = portal.m_nview.GetZDO()
                 .GetConnectionZDOID(ZDOExtraData.ConnectionType.Portal);
@@ -82,7 +101,7 @@ namespace Tollbound.Patches
             var target = ZDOMan.instance.GetZDO(connection);
             if (target == null)
             {
-                return;
+                return false;
             }
 
             var rotation = target.GetRotation();
@@ -90,8 +109,13 @@ namespace Tollbound.Patches
                               + rotation * Vector3.forward * portal.m_exitDistance
                               + Vector3.up;
 
-            player.TeleportTo(destination, rotation, distantTeleport: true);
+            if (!player.TeleportTo(destination, rotation, distantTeleport: true))
+            {
+                return false;
+            }
+
             Game.instance.IncrementPlayerStat(PlayerStatType.PortalsUsed);
+            return true;
         }
     }
 

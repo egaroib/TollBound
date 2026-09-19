@@ -172,7 +172,19 @@ namespace Tollbound.Gameplay
             }
 
             var drop = go.GetComponent<ItemDrop>();
-            return drop?.m_itemData?.m_shared != null && !drop.m_itemData.m_shared.m_teleportable;
+            var shared = drop?.m_itemData?.m_shared;
+            if (shared == null)
+            {
+                return false;
+            }
+
+            // 1.0 added a second, harder restriction: Inventory.IsTeleportable refuses any
+            // item with m_toolTier >= 1000 even when the portal allows all items and even
+            // under the TeleportAll global key. Tollbound bypasses vanilla's check at a
+            // biome portal, so without this such an item would ride through free while
+            // vanilla refuses it at every portal -- exactly the "more permissive than
+            // vanilla" outcome the gate is written to avoid.
+            return !shared.m_teleportable || shared.m_toolTier >= 1000;
         }
     }
 

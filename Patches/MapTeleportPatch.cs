@@ -21,10 +21,24 @@ namespace Tollbound.Patches
     [HarmonyPatch(typeof(Player), nameof(Player.TeleportTo))]
     internal static class MapTeleportPatch
     {
+        /// <summary>Vanilla's own refusal window after an arrival, from Player.TeleportTo.</summary>
+        private const float Cooldown = 2f;
+
+        private static readonly AccessTools.FieldRef<Player, float> TeleportCooldown =
+            AccessTools.FieldRefAccess<Player, float>("m_teleportCooldown");
+
         private static bool Prefix(
             Player __instance, Vector3 pos, bool distantTeleport, ref bool __result)
         {
             if (!TargetPortalBridge.MapCrossingInProgress || !distantTeleport)
+            {
+                return true;
+            }
+
+            // Vanilla is about to refuse this itself — a crossing is already in flight, or
+            // the last one landed moments ago. Let it, silently and for free: a toll taken
+            // for a crossing that does not happen would be taken for nothing.
+            if (__instance.IsTeleporting() || TeleportCooldown(__instance) < Cooldown)
             {
                 return true;
             }
