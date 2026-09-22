@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2
+- Changed the required Jotunn version to 2.30.2, matching servers on the latest Jotunn
+
 ## 1.0.1
 - Fixed one walk through a portal charging the toll several times over
 - Fixed the spirit repeating its line a dozen times for a single crossing
