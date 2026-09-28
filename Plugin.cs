@@ -22,6 +22,8 @@ namespace Tollbound
         BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency(Gameplay.Portals.TargetPortalBridge.Guid,
         BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(Gameplay.Portals.PortalLinesBridge.Guid,
+        BepInDependency.DependencyFlags.SoftDependency)]
     // EveryoneMustHaveMod: clients without this mod are refused, instead of silently
     // desyncing. Drop to NotEnforced only for purely local, presentation-only mods.
     // See references/multiplayer.md.
@@ -30,7 +32,7 @@ namespace Tollbound
     {
         public const string PluginGuid = "com.ragemedia.tollbound";
         public const string PluginName = "Tollbound";
-        public const string PluginVersion = "1.0.2";
+        public const string PluginVersion = "1.0.3";
 
         internal static TollboundPlugin Instance;
 
@@ -69,6 +71,7 @@ namespace Tollbound
             TollboundConfig.ResolveTollItems();
             Gameplay.Backpacks.BackpackBridge.Bind();
             Gameplay.Portals.TargetPortalBridge.Bind(Instance.Harmony);
+            Gameplay.Portals.PortalLinesBridge.Bind();
 
             if (TollboundConfig.WriteItemReport.Value)
             {

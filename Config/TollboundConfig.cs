@@ -35,6 +35,8 @@ namespace Tollbound.Config
         internal static ConfigEntry<float> IdleGlowIntensity;
         internal static ConfigEntry<float> ConnectedGlowIntensity;
 
+        internal static ConfigEntry<bool> PortalLinesPins;
+
         private sealed class TierEntries
         {
             internal ConfigEntry<string> TollItem;
@@ -94,6 +96,13 @@ namespace Tollbound.Config
                     "Brightness of a biome portal's glow once connected. Vanilla uses 5. " +
                     "Visual only.",
                     new AcceptableValueRange<float>(0.5f, 12f)));
+
+            PortalLinesPins = cfg.Bind(
+                "Appearance", "PortalLinesPins", true,
+                "When PortalLines is installed, colour its map pins by biome portal tier. " +
+                "A pin PortalLines marks as unlinked or conflicting keeps its warning colour " +
+                "and gains a dot in the tier's colour instead. Does nothing without " +
+                "PortalLines. Local only.");
 
             foreach (var tier in Tiers.All)
             {

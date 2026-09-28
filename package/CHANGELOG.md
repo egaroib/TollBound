@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+- Added PortalLines support: its map pins take the colour of the portal's biome tier
+- Added a tier-coloured dot on PortalLines pins it marks as unlinked or conflicting
+
 ## 1.0.2
 - Changed the required Jotunn version to 2.30.2, matching servers on the latest Jotunn
 

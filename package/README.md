@@ -139,9 +139,14 @@ supported. Warping from a biome portal to a map pin is gated exactly like walkin
 one — same ceiling from both ends, same tolls, same loss rolls. Leaving a wood or stone
 portal by map is left alone.
 
+[PortalLines](https://valheim.thunderstore.io/package/Jumpingmushroom/PortalLines/) pins take
+the colour of the portal's biome tier. A pin PortalLines marks red (no partner) or orange
+(tag conflict) keeps that warning and gains a dot in the tier's colour on its corner. Wood
+and stone portals are left as PortalLines draws them.
+
 ### Everything else
 
-Both of the above are soft dependencies bound by reflection, so neither is required and
+All of the above are soft dependencies bound by reflection, so neither is required and
 their updates cannot break this mod. If one is installed but its API has changed shape,
 Tollbound says so in the log rather than quietly letting cargo through.
 
@@ -170,6 +175,7 @@ Settings live in `BepInEx/config/com.ragemedia.tollbound.cfg`, generated on firs
 | Appearance | `SpiritDialogue` | no | The spirits' centre-screen lines. Off leaves only the itemised ledger. |
 | Appearance | `IdleGlowIntensity` | no | Brightness of a portal's glow before it pairs. Vanilla portals sit dark; the default keeps each biome tellable apart. |
 | Appearance | `ConnectedGlowIntensity` | no | Brightness once connected. Vanilla uses 5. |
+| Appearance | `PortalLinesPins` | no | Colour PortalLines' map pins by tier. Does nothing without PortalLines. |
 | Tolls | `Scaling` | **admin** | `Flat` charges one toll per biome per crossing. `PerLoad` charges one toll for every `LoadSize` units, so bulk moves cost proportionally more. |
 | Tier – *biome* | `TollItem` | **admin** | Prefab name of the item that biome's spirit takes as passage. A name that does not exist falls back to the default and says so in the log. |
 | Tier – *biome* | `TollAmount` | **admin** | How many, per crossing. 0 makes that biome toll-free. |

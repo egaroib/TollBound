@@ -76,10 +76,13 @@ risk — before you step through.*
 ## Compatibility
 
 [AdventureBackpacks](https://github.com/Vapok/AdventureBackpacks),
-[Backpacks](https://github.com/blaxxun-boop/Backpacks) and
-[TargetPortal](https://github.com/blaxxun-boop/TargetPortal) are supported, as soft
-dependencies bound by reflection so their updates cannot break this mod. Cargo in a backpack
-is tolled and taxed like anything else; map warps are gated like walked crossings.
+[Backpacks](https://github.com/blaxxun-boop/Backpacks),
+[TargetPortal](https://github.com/blaxxun-boop/TargetPortal) and
+[PortalLines](https://valheim.thunderstore.io/package/Jumpingmushroom/PortalLines/) are
+supported, as soft dependencies bound by reflection so their updates cannot break this mod.
+Cargo in a backpack is tolled and taxed like anything else; map warps are gated like walked
+crossings; PortalLines' map pins take the tier's colour, with a tier-coloured dot on any pin
+it flags as unlinked.
 
 Tollbound portals deliberately do not set `m_allowAllItems`. Portal mods read that flag as
 "no restrictions", so setting it would make a biome portal *more* permissive than a vanilla
